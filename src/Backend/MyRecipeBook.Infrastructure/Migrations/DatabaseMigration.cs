@@ -17,7 +17,6 @@ namespace MyRecipeBook.Infrastructure.Migrations
 
         public static void EnsureDataBaseCreated(string connectionString)
         {
-            string teste;
 
             var connectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
 
