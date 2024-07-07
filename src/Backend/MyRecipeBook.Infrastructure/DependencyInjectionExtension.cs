@@ -2,7 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MyRecipeBook.Domain.Repositories.User;
 using MyRecipeBook.Infrastructure.Context;
+using MyRecipeBook.Infrastructure.DataAccess;
+using MyRecipeBook.Infrastructure.DataAccess.Repositories;
 using MyRecipeBook.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
@@ -19,6 +22,7 @@ namespace MyRecipeBook.Infrastructure
         {
             AddDbContext(services, configuration);
             AddFluentMigrator(services, configuration);
+            AddRepositories(services);
         }
 
         private static void AddDbContext(IServiceCollection services, IConfiguration configuration)
@@ -29,7 +33,10 @@ namespace MyRecipeBook.Infrastructure
 
         private static void AddRepositories(IServiceCollection services)
         {
+            services.AddScoped<IUnityOfWork, UnityOfWork>();
 
+            services.AddScoped<IUserReadOnlyRepository, UserRepository>();
+            services.AddScoped<IUserWriteOnlyRepository, UserRepository>();
         }
 
         private static void AddFluentMigrator(IServiceCollection services, IConfiguration configuration) 
