@@ -49,7 +49,7 @@ namespace MyRecipeBook.Application.UseCases.User.Register
 
             return new ResponseRegisteredUserJson
             {
-                Name = requestUser.Name,
+                Name = user.Name,
             };
         }
 
