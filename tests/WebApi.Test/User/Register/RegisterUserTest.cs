@@ -14,6 +14,8 @@ namespace WebApi.Test.User.Register
     public class RegisterUserTest : IClassFixture<CustomWebApplicationFactory>
     {
         private readonly HttpClient _httpClient;
+        private readonly string method = "user";
+
         public RegisterUserTest(CustomWebApplicationFactory factory) 
         {
             _httpClient = factory.CreateClient();
@@ -26,7 +28,7 @@ namespace WebApi.Test.User.Register
             var request = RequestRegisterUserJsonBuilder.Build();
 
             //act
-            var response = await _httpClient.PostAsJsonAsync("api/User", request);
+            var response = await _httpClient.PostAsJsonAsync("api/" + method, request);
 
             //assert
             await using var responseBody = await response.Content.ReadAsStreamAsync();

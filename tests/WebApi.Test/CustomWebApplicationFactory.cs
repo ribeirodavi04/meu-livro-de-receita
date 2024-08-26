@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.InMemory;
+using Microsoft.Extensions.DependencyInjection;
 using MyRecipeBook.Infrastructure.Context;
 using System;
 using System.Collections.Generic;
@@ -23,6 +23,11 @@ namespace WebApi.Test
                         services.Remove(descriptor);
 
                     var provider = services.AddEntityFrameworkInMemoryDatabase().BuildServiceProvider();
+                    services.AddDbContext<MyRecipeBookDbContext>(options =>
+                    {
+                        options.UseInMemoryDatabase("InMemoryDbForTesting");
+                        options.UseInternalServiceProvider(provider);
+                    });
 
                 });
         }
