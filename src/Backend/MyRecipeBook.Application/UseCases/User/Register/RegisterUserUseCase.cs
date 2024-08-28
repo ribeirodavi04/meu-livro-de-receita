@@ -3,6 +3,7 @@ using MyRecipeBook.Application.Services.Cryptography;
 using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Communication.Responses;
 using MyRecipeBook.Domain.Repositories.User;
+using MyRecipeBook.Domain.Security.Tokens;
 using MyRecipeBook.Exceptions;
 using MyRecipeBook.Exceptions.ExceptionsBase;
 using System;
@@ -19,19 +20,22 @@ namespace MyRecipeBook.Application.UseCases.User.Register
         private readonly IUserWriteOnlyRepository _userWriteOnlyRepository;
         private readonly IUnityOfWork _unityOfWork;
         private readonly IMapper _mapper;
+        private readonly IAccessTokenGenerator _accessTokenGenerator;
         private readonly PasswordEncripter _passwordEncripter;
 
         public RegisterUserUseCase(
             IUserReadOnlyRepository userReadOnlyRepository,
             IUserWriteOnlyRepository userWriteOnlyRepository,   
             IUnityOfWork unityOfWork,   
-            IMapper mapper, 
+            IMapper mapper,
+            IAccessTokenGenerator accessTokenGenerator,
             PasswordEncripter passwordEncripter)
         {
             _userReadOnlyRepository = userReadOnlyRepository;
             _userWriteOnlyRepository = userWriteOnlyRepository;
             _unityOfWork = unityOfWork;
             _mapper = mapper;
+            _accessTokenGenerator = accessTokenGenerator;
             _passwordEncripter = passwordEncripter;
         }
 
@@ -50,6 +54,10 @@ namespace MyRecipeBook.Application.UseCases.User.Register
             return new ResponseRegisteredUserJson
             {
                 Name = user.Name,
+                Tokens = new ResponseTokensJson
+                {
+                    AccessToken = _accessTokenGenerator.Generate(user.UserId)
+                }
             };
         }
 
