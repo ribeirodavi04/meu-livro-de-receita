@@ -2,6 +2,7 @@
 using Common.TestUtilities.Mapper;
 using Common.TestUtilities.Repositories;
 using Common.TestUtilities.Requests;
+using Common.TestUtilities.Tokens;
 using FluentAssertions;
 using MyRecipeBook.Application.UseCases.User.Register;
 using MyRecipeBook.Exceptions;
@@ -23,11 +24,12 @@ namespace UseCases.Test.User.Register
             var unitOfWork = UnitOfWorkBuilder.Build();
             var userWriteOnlyRepository = UserWriteOnlyRepositoryBuilder.Build();
             var userReadOnlyRepository = new UserReadOnlyRepositoryBuilder();
-            
-            if(string.IsNullOrEmpty(email) == false)
+            var accessTokenGenerator = JwtTokenGeneratorBuilder.Build();
+
+            if (string.IsNullOrEmpty(email) == false)
                 userReadOnlyRepository.ExistActiveUserWithEmail(email);
 
-            return new RegisterUserUseCase(userReadOnlyRepository.Build(), userWriteOnlyRepository, unitOfWork, mapper, passwordEncripter);
+            return new RegisterUserUseCase(userReadOnlyRepository.Build(), userWriteOnlyRepository, unitOfWork, mapper, accessTokenGenerator, passwordEncripter);
         }
 
         [Fact]
@@ -44,7 +46,9 @@ namespace UseCases.Test.User.Register
 
             //Assert
             result.Should().NotBeNull();
+            result.Tokens.Should().NotBeNull();
             result.Name.Should().Be(request.Name);
+            result.Tokens.AccessToken.Should().NotBeNullOrEmpty();
         }
 
         [Fact]

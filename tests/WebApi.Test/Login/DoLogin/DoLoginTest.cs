@@ -50,6 +50,7 @@ namespace WebApi.Test.Login.DoLogin
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
             responseData.RootElement.GetProperty("name").GetString().Should().NotBeNullOrWhiteSpace().And.Be(_name);
+            responseData.RootElement.GetProperty("tokens").GetProperty("accessToken").GetString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]

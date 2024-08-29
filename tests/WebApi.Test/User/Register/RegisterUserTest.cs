@@ -36,6 +36,8 @@ namespace WebApi.Test.User.Register
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
             responseData.RootElement.GetProperty("name").GetString().Should().NotBeNullOrWhiteSpace().And.Be(request.Name);
+            responseData.RootElement.GetProperty("tokens").GetProperty("accessToken").GetString().Should().NotBeNullOrEmpty();
+
         }
     }
 }

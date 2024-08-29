@@ -2,6 +2,7 @@
 using Common.TestUtilities.Entities;
 using Common.TestUtilities.Repositories;
 using Common.TestUtilities.Requests;
+using Common.TestUtilities.Tokens;
 using FluentAssertions;
 using MyRecipeBook.Application.UseCases.Login.DoLogin;
 using MyRecipeBook.Communication.Requests;
@@ -22,11 +23,12 @@ namespace UseCases.Test.Login.DoLogin
         {
             var encriptedPassword = PasswordEncripterBuilder.Build();
             var userReadOnlyRepositoryBuilder = new UserReadOnlyRepositoryBuilder();
+            var accessTokenGenerator = JwtTokenGeneratorBuilder.Build();
 
             if (user is not null)
                 userReadOnlyRepositoryBuilder.GetByEmailAndPassword(user);
 
-            return new DoLoginUseCase(userReadOnlyRepositoryBuilder.Build(), encriptedPassword);
+            return new DoLoginUseCase(userReadOnlyRepositoryBuilder.Build(), encriptedPassword, accessTokenGenerator);
         }
 
         [Fact]
@@ -46,7 +48,9 @@ namespace UseCases.Test.Login.DoLogin
 
             //Assert
             result.Should().NotBeNull();
+            result.Tokens.Should().NotBeNull();
             result.Name.Should().NotBeNullOrWhiteSpace().And.Be(user.Name);
+            result.Tokens.AccessToken.Should().NotBeNullOrEmpty();
         }
 
 
