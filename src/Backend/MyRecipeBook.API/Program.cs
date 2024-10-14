@@ -47,7 +47,6 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddScoped<ITokenProvider, HttpContextTokenValue>();
